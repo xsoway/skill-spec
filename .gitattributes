@@ -1,0 +1,6 @@
+# 统一行尾：文本文件使用 LF，避免跨平台 diff 噪音
+* text=auto eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf

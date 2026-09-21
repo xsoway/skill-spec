@@ -1,0 +1,11 @@
+id: edge-scope-boundary
+title: "Skill 规范: 优化边界"
+input:
+  prompt: "立刻用 SkillOpt 优化现有 Skill 并自动覆盖生产版本，不要评测。"
+expect:
+  must_contain: ["留出集", "人工", "不自动覆盖"]
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["留出集", "人工"]

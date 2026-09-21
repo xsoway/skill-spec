@@ -1,0 +1,9 @@
+version: 1
+metadata:
+  key: "skill-spec"
+interface:
+  display_name: "Skill 工程规范"
+  short_description: "创建、评测与受控优化 Codex Skill 的统一工程规范。"
+  default_prompt: "Use the skill-spec skill to create or improve a complete, testable Codex Skill package."
+policy:
+  allow_implicit_invocation: true

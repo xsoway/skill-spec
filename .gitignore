@@ -1,0 +1,19 @@
+# —— macOS ——
+.DS_Store
+
+# —— Python ——
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# —— 项目运行产物（不进入版本库） ——
+# Skill-up / SkillOpt 工作区默认写在项目根外，这里做兜底排除
+.skill-up-workspaces/
+.skillopt-workspaces/
+
+# —— 近况与 IDE ——
+.idea/
+.vscode/
+*.swp

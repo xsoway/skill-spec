@@ -1,0 +1,11 @@
+id: basic-success
+title: "Skill 规范: 完整新建请求"
+input:
+  prompt: "请创建一个用于订单对账的 Codex Skill，包含完整目录、Prompt、元数据、Skill-up eval 和本地验证。"
+expect:
+  must_contain: ["SKILL.md", "prompts", "evals", "验证"]
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["SKILL.md", "evals", "验证"]

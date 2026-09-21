@@ -1,0 +1,11 @@
+id: edge-incomplete-input
+title: "Skill 规范: 信息不完整"
+input:
+  prompt: "帮我做一个 Skill，但没有描述用途、输入或输出。"
+expect:
+  must_contain: ["信息缺口", "待确认", "假设"]
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["信息缺口", "待确认"]
