@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/skill--spec-1.0-blue" alt="skill-spec version">
+  <img src="https://img.shields.io/badge/skill--spec-1.1.0-blue" alt="skill-spec version">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="license">
   <img src="https://img.shields.io/badge/status-stable-success" alt="status">
   <img src="https://img.shields.io/badge/python-3.9+-informational" alt="python version">
@@ -123,8 +123,9 @@ skill-spec/
 ├── agents/openai.yaml              # discovery metadata (metadata.key matches directory / frontmatter name)
 ├── references/
 │   ├── package-contract.md         # package contract: required artifacts, independence, safety, validation levels
-│   ├── skill-up-integration.md     # Skill-up evaluation / eval-schema validation
-│   └── skillopt-integration.md     # SkillOpt controlled optimization: isolation, held-out, promotion gate
+│   ├── skill-up-integration.md      # Skill-up evaluation / eval-schema validation
+│   └── skillopt-integration.md      # SkillOpt controlled optimization: isolation, held-out, promotion gate
+├── skills/skill-upper/              # vendored Agent Skill: skill-up CLI evaluation methodology (marked source)
 ├── examples/skill-package-tree.md  # standard package skeleton (incl. optional optimization/)
 ├── evals/
 │   ├── eval.yaml                   # schema / engine / timings / assertion defaults

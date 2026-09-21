@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/skill--spec-1.0-blue" alt="skill-spec 版本">
+  <img src="https://img.shields.io/badge/skill--spec-1.1.0-blue" alt="skill-spec 版本">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="许可证">
   <img src="https://img.shields.io/badge/status-stable-success" alt="状态">
   <img src="https://img.shields.io/badge/python-3.9+-informational" alt="Python 版本">
@@ -125,7 +125,7 @@ skill-spec/
 │   ├── package-contract.md         # 包契约：必需工件、独立性、安全、最小验证层级
 │   ├── skill-up-integration.md     # Skill-up 评测/eval schema 校验集成规范
 │   └── skillopt-integration.md     # SkillOpt 受控优化：隔离、留出集、晋升门禁
-├── examples/skill-package-tree.md  # 标准包骨架（含可选 optimization/）
+├── skills/skill-upper/              # vendored Agent Skill：skill-up CLI 评测方法论（标注来源）
 ├── evals/
 │   ├── eval.yaml                   # schema/engine/超时/断言默认
 │   └── cases/
