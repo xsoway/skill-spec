@@ -46,7 +46,7 @@
 
 `skill-spec` is a **unified engineering standard** for building **Codex Skill packages**. It turns "writing a skill" from dumping a single `SKILL.md` into "submitting a complete, verifiable, safety-bounded package".
 
-A **Codex Skill** is a self-contained, reusable capability bundle that an AI coding agent (e.g. Codex) can load on demand to change how it makes key judgements on a class of tasks. A naive skill is just one Markdown file; under this standard, a skill becomes a **package** with:
+A **Codex Skill** is a self-contained, reusable capability bundle that an AI coding agent (e.g. Codex) can load on demand to change how it makes key judgements on a class of tasks. The simplest form is just one Markdown file; under this standard, a skill becomes a **package** with:
 
 - a lightweight activation entry (`SKILL.md`),
 - a complete execution spec (`prompts/<name>.md`),
