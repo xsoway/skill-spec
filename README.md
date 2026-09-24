@@ -177,8 +177,8 @@ The validator checks the following **invariants**:
 2. `SKILL.md` frontmatter has `name: <directory>`.
 3. `agents/openai.yaml` has `metadata.key: "<directory>"`.
 4. `SKILL.md` contains the six required headings: `## 何时使用`, `## 输出格式选项`, `## 如何使用`, `## 参考文件`, `## 常见误区`, `## 最佳实践`.
-5. No `.md`/`.yaml` file matches the credential pattern (`sk-…`, `authorization:`, `api key`, `bearer …`).
-6. No `.md`/`.yaml` file contains an absolute local path (`/Users/…`, `/home/…`).
+5. No `.md`/`.yaml` file matches the credential pattern (`sk-…`, an `authorization` header, `api key`, `bearer …`).
+6. No `.md`/`.yaml` file contains an absolute local path (a user-home prefix such as `Users/…` or `home/…` under `/`).
 
 **Independence & safety**: package Markdown may only link to same-package relative files or official external links — never another local skill's internals.
 
@@ -311,7 +311,7 @@ Assertions use `must_contain` on required concepts, not fixed phrasing, so reaso
 ## Safety boundary
 
 - **No secrets**: no real keys, tokens, cookies, or private keys in any artifact.
-- **No personal data** and **no absolute local paths** (`/Users/…`, `/home/…`).
+- **No personal data** and **no absolute local paths** (a user-home prefix such as `Users/…` or `home/…` under `/`).
 - **No unauthorized external actions**: a model run only happens under explicit `--execute`; training never auto-publishes.
 - **No fabricated run conclusions**: if a CLI is missing or a run is not authorized, report the *not-run* state honestly — never pretend it succeeded.
 - **Optimize ≠ publish**: candidates require held-out + human gate and must be rollback-able.

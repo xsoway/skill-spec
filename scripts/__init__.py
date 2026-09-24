@@ -1,0 +1,1 @@
+# skill_spec_scripts 包标记：使 scripts/ 可被打包为可安装的 Python 包。

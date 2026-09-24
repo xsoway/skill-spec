@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "skill-spec"
+version = "1.1.0"
+description = "Unified engineering standard for building Codex Skill packages — discoverable, installable, evaluable, safely evolvable."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "xulanzhong", email = "xulanzhong521@gmail.com" },
+]
+keywords = ["ai", "llm", "skill", "codex", "agent", "persona", "self-memory", "engineering"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development",
+]
+dependencies = []
+
+[project.scripts]
+skill-spec-validate = "skill_spec_scripts.validate_skill_package:main"
+skill-spec-skill-up = "skill_spec_scripts.skill_up:main"
+skill-spec-skillopt = "skill_spec_scripts.skillopt:main"
+
+[tool.setuptools]
+# 将 scripts/ 打包为 skill_spec_scripts 包：保留仓库内 scripts/*.py 的独立运行方式，
+# 同时让安装后的 console scripts（skill-spec-*）能直接 import 到同一命名空间。
+package-dir = { "skill_spec_scripts" = "scripts" }
+packages = ["skill_spec_scripts"]

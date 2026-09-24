@@ -8,7 +8,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-from validate_skill_package import main as validate_package
+try:
+    # 安装为 skill_spec_scripts 包时使用相对导入
+    from .validate_skill_package import main as validate_package
+except ImportError:
+    # 在 scripts/ 目录内独立运行时使用裸模块导入
+    from validate_skill_package import main as validate_package
 
 
 def package_ok(skill_dir: Path) -> bool:
