@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>skill-spec — Build Codex Skill packages that ship</title>
+<meta name="description" content="skill-spec: the unified engineering standard for building Codex Skill packages — discoverable, installable, evaluable, safely evolvable.">
+<meta name="theme-color" content="#1d2021">
+<style>
+  :root{
+    --bg0:#1d2021; --bg1:#282828; --bg2:#32302f; --bg3:#3c3836;
+    --fg0:#e5d9c5; --fg1:#d4be98; --fg2:#928374; --fg3:#7c6f64;
+    --gold:#d8a657; --gold-bright:#e0af68; --gold-hi:#fabd2f;
+    --gold-dim:#a4834f; --good:#8ec07c; --line:rgba(216,166,87,.16);
+    --rad:8px; --mono:"SF Mono","JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --shadow:0 20px 60px -25px rgba(0,0,0,.65);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1100px 520px at 50% -12%, rgba(216,166,87,.10), transparent 62%),
+      radial-gradient(900px 500px at 88% 12%, rgba(224,175,104,.06), transparent 55%),
+      var(--bg0);
+    color:var(--fg1);
+    font-family:var(--sans);
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:rgba(216,166,87,.28);color:var(--fg0)}
+  a{color:var(--gold);text-decoration:none}
+  a:hover{color:var(--gold-hi)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+  code{font-family:var(--mono);font-size:.86em;background:var(--bg2);border:1px solid var(--line);padding:.12em .42em;border-radius:5px;color:var(--gold-bright)}
+  pre{background:var(--bg1);border:1px solid var(--line);border-radius:var(--rad);padding:18px 20px;overflow:auto;box-shadow:var(--shadow)}
+  pre code{background:none;border:0;padding:0;color:var(--fg0);font-size:13px;line-height:1.55}
+  .mono{font-family:var(--mono)}
+
+  /* ===== nav ===== */
+  nav{position:sticky;top:0;z-index:50;background:rgba(29,32,33,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--fg0);letter-spacing:.2px}
+  .brand .dot{width:11px;height:11px;border-radius:3px;background:linear-gradient(135deg,var(--gold),var(--gold-hi));box-shadow:0 0 14px rgba(216,166,87,.55)}
+  .brand small{font-family:var(--mono);color:var(--fg2);font-weight:400;font-size:.72em}
+  .nav-links{display:flex;align-items:center;gap:26px}
+  .nav-links a{color:var(--fg2);font-size:.9rem;transition:color .18s}
+  .nav-links a:hover{color:var(--gold-bright)}
+  .lang-toggle{display:flex;align-items:center;background:var(--bg1);border:1px solid var(--line);border-radius:999px;padding:3px}
+  .lang-toggle button{background:none;border:0;color:var(--fg2);font-size:.78rem;font-weight:600;padding:5px 13px;border-radius:999px;cursor:pointer;transition:all .2s}
+  .lang-toggle button.active{background:linear-gradient(135deg,var(--gold),var(--gold-hi));color:#1d2021;box-shadow:0 2px 10px rgba(216,166,87,.4)}
+
+  /* ===== hero ===== */
+  header.hero{position:relative;padding:112px 0 96px;text-align:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);border:1px solid var(--line);background:var(--bg1);padding:7px 16px;border-radius:999px;margin-bottom:30px}
+  .eyebrow .pulse{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 10px var(--good);animation:pulse 2.2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  h1{font-size:clamp(2.6rem,7vw,4.6rem);line-height:1.05;font-weight:800;color:var(--fg0);letter-spacing:-.02em}
+  h1 .gold{background:linear-gradient(100deg,var(--gold) 0%,var(--gold-hi) 55%,var(--gold-bright) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{max-width:640px;margin:24px auto 0;color:var(--fg2);font-size:1.13rem}
+  .hero-cta{display:flex;gap:14px;justify-content:center;margin-top:38px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:13px 26px;border-radius:var(--rad);font-weight:600;font-size:.95rem;transition:all .2s;border:1px solid transparent}
+  .btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-hi));color:#1d2021;box-shadow:0 10px 30px -10px rgba(216,166,87,.55)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px -10px rgba(216,166,87,.7);color:#141617}
+  .btn-ghost{border-color:var(--line);color:var(--fg1);background:var(--bg1)}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold-bright);transform:translateY(-2px)}
+  .pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:16px;margin-top:74px;text-align:left}
+  .pillar{background:var(--bg1);border:1px solid var(--line);border-radius:12px;padding:22px 22px 20px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s}
+  .pillar::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .25s}
+  .pillar:hover{transform:translateY(-4px);border-color:rgba(216,166,87,.4)}
+  .pillar:hover::before{opacity:1}
+  .pillar .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;color:var(--gold);text-transform:uppercase}
+  .pillar h3{color:var(--fg0);font-size:1.06rem;margin:10px 0 8px}
+  .pillar p{color:var(--fg2);font-size:.9rem}
+
+  /* ===== sections ===== */
+  section{padding:76px 0;border-top:1px solid var(--line)}
+  .sec-head{max-width:640px;margin-bottom:42px}
+  .sec-head .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+  .sec-head h2{font-size:clamp(1.7rem,4vw,2.4rem);color:var(--fg0);font-weight:800;letter-spacing:-.01em}
+  .sec-head p{color:var(--fg2);margin-top:12px}
+
+  .grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:start}
+  @media(max-width:840px){.grid2{grid-template-columns:1fr}}
+
+  .card{background:var(--bg1);border:1px solid var(--line);border-radius:12px;padding:26px;box-shadow:var(--shadow)}
+  .card h3{color:var(--fg0);font-size:1.1rem;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .card h3 .g{color:var(--gold);font-family:var(--mono);font-size:.8rem;letter-spacing:.1em}
+  .list{list-style:none}
+  .list li{display:flex;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);color:var(--fg2);font-size:.94rem}
+  .list li:last-child{border-bottom:0}
+  .list li::before{content:"◆";color:var(--gold);font-size:.6rem;margin-top:.5em;opacity:.85}
+  .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+  .mini{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.76rem;color:var(--fg2);background:var(--bg2);border:1px solid var(--line);padding:6px 12px;border-radius:6px}
+  .mini .ok{color:var(--good)}
+
+  .cmd-block{margin-top:16px}
+  .cmd-block .cm{font-family:var(--mono);font-size:12px;color:var(--fg2)}
+  .cmd-block .cm .$ {color:var(--gold-bright)}
+  .cmd-block pre{margin-top:8px}
+
+  .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;counter-reset:step}
+  .step{background:var(--bg1);border:1px solid var(--line);border-radius:12px;padding:20px;position:relative;transition:transform .2s}
+  .step:hover{transform:translateY(-3px)}
+  .step::before{counter-increment:step;content:counter(step,decimal-leading-zero);font-family:var(--mono);font-size:.7rem;color:var(--gold);letter-spacing:.1em}
+  .step h4{color:var(--fg0);font-size:.98rem;margin:10px 0 6px}
+  .step p{color:var(--fg2);font-size:.86rem}
+
+  .cta-band{background:linear-gradient(135deg,rgba(216,166,87,.10),rgba(224,175,104,.04));border:1px solid var(--line);border-radius:16px;padding:52px;text-align:center;position:relative;overflow:hidden}
+  .cta-band::after{content:"";position:absolute;inset:auto -20% -70% -20%;height:60%;background:radial-gradient(closest-side,rgba(216,166,87,.16),transparent);pointer-events:none}
+  .cta-band h2{color:var(--fg0);font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:800}
+  .cta-band p{color:var(--fg2);max-width:560px;margin:16px auto 30px}
+
+  footer{border-top:1px solid var(--line);padding:40px 0 48px;color:var(--fg3);font-size:.86rem}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  .foot .brand{color:var(--fg2);font-weight:600}
+  .foot-links{display:flex;gap:20px}
+  .foot-links a{color:var(--fg3)}
+  .foot-links a:hover{color:var(--gold)}
+
+  /* reveal on scroll */
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+  .rv.in{opacity:1;transform:none}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top"><span class="dot"></span>skill-spec<small>v1.1.0</small></a>
+    <div class="nav-links">
+      <a href="#about" data-i18n="nav.about">About</a>
+      <a href="#contract" data-i18n="nav.contract">Contract</a>
+      <a href="#cli" data-i18n="nav.cli">CLI</a>
+      <a href="#workflow" data-i18n="nav.workflow">Workflow</a>
+      <span class="lang-toggle" role="group" aria-label="Language / 语言">
+        <button data-langbtn="en" class="active" data-i18n="lang.en">EN</button>
+        <button data-langbtn="zh" data-i18n="lang.zh">中文</button>
+      </span>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="eyebrow"><span class="pulse"></span><span data-i18n="hero.eyebrow">Engineering standard for Codex Skill packages</span></span>
+    <h1><span data-i18n="hero.h1a">Build Codex Skills that</span><br><span class="gold" data-i18n="hero.h1b">ship like software</span></h1>
+    <p class="sub" data-i18n="hero.sub">skill-spec turns "writing a skill" from a lone SKILL.md into a complete, verifiable, safety-bounded package — discoverable, installable, evaluable, and safely evolvable.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://github.com/xsoway/skill-spec" data-i18n="hero.cta1">View on GitHub</a>
+      <a class="btn btn-ghost" href="https://github.com/xsoway/skill-spec/releases" data-i18n="hero.cta2">Releases &amp; assets</a>
+    </div>
+    <div class="pillars">
+      <div class="pillar"><div class="k" data-i18n="pillar1.k">01 · Discoverable</div><h3 data-i18n="pillar1.t">Machine-readable metadata</h3><p data-i18n="pillar1.d">agents/openai.yaml exposes key-consistent metadata so an agent runtime can find and route to the skill.</p></div>
+      <div class="pillar"><div class="k" data-i18n="pillar2.k">02 · Installable</div><h3 data-i18n="pillar2.t">Self-contained packages</h3><p data-i18n="pillar2.d">Deep rules are pulled in on demand from references/, so a package copied on its own still works.</p></div>
+      <div class="pillar"><div class="k" data-i18n="pillar3.k">03 · Evaluable</div><h3 data-i18n="pillar3.t">Layered evidence</h3><p data-i18n="pillar3.d">Static validation, model run, and training are reported separately — never impersonating each other.</p></div>
+      <div class="pillar"><div class="k" data-i18n="pillar4.k">04 · Safely Evolvable</div><h3 data-i18n="pillar4.t">Gated, rollback-friendly</h3><p data-i18n="pillar4.d">Optimization only promotes a candidate on non-degraded held-out plus human approval. No silent overwrites.</p></div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="tag" data-i18n="about.tag">What it is</div>
+      <h2 data-i18n="about.h">From a lone entry point to a shippable package</h2>
+      <p data-i18n="about.p">A Codex Skill is a self-contained capability bundle an AI coding agent loads on demand. Under this standard, a skill becomes a package: a lightweight activation entry, a complete execution spec, machine-readable discovery metadata, a pinned regression contract, and an executable safety validator.</p>
+    </div>
+    <div class="grid2">
+      <div>
+        <pre><code>skill-spec/
+├── SKILL.md                    # activation entry: routing / hard constraints
+├── prompts/&lt;name&gt;.md           # full execution spec: input, judgement, rules
+├── agents/openai.yaml          # discovery metadata (key matches directory)
+├── evals/eval.yaml + 3 cases   # regression contract: happy / missing / scope
+├── references/                 # deep rules loaded on demand
+├── scripts/
+│   ├── validate_skill_package.py  # structural + safety + link validation
+│   ├── skill_up.py                # safe Skill-up adapter
+│   └── skillopt.py                # safe SkillOpt adapter
+└── tests/test_skill_spec.py    # local unit tests</code></pre>
+      </div>
+      <div class="card rv">
+        <h3><span class="g">◆</span><span data-i18n="about.card.h">Why the standard exists</span></h3>
+        <ul class="list">
+          <li><span data-i18n="about.card.l1">Discoverable — consistent metadata an agent runtime can actually route on.</span></li>
+          <li><span data-i18n="about.card.l2">Installable — each package is self-contained and works on its own.</span></li>
+          <li><span data-i18n="about.card.l3">Evaluable — a static check is never falsely reported as verified model behavior.</span></li>
+          <li><span data-i18n="about.card.l4">Safely evolvable — candidates require a held-out gate plus a human approver.</span></li>
+          <li><span data-i18n="about.card.l5">Safe — packages never ship real secrets, personal data, or absolute local paths.</span></li>
+        </ul>
+        <div class="badges">
+          <span class="mini"><span class="ok">●</span> MIT</span>
+          <span class="mini"><span class="ok">●</span> Python 3.9+</span>
+          <span class="mini"><span class="ok">●</span> stdlib only</span>
+          <span class="mini"><span class="ok">●</span> Stable</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contract">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="tag" data-i18n="contract.tag">Package contract</div>
+      <h2 data-i18n="contract.h">Six invariants, verified offline</h2>
+      <p data-i18n="contract.p">The validator checks required artifacts, name/key consistency, required headings, and scans every file for credentials and absolute local paths.</p>
+    </div>
+    <div class="card rv">
+      <ul class="list">
+        <li data-i18n="contract.l1">Required artifacts exist — SKILL.md, prompts/&lt;name&gt;.md, agents/openai.yaml, evals/eval.yaml, three cases, the validator itself.</li>
+        <li data-i18n="contract.l2">SKILL.md frontmatter name matches the directory.</li>
+        <li data-i18n="contract.l3">agents/openai.yaml metadata.key matches the directory.</li>
+        <li data-i18n="contract.l4">SKILL.md contains the six required headings.</li>
+        <li data-i18n="contract.l5">No file matches the credential pattern.</li>
+        <li data-i18n="contract.l6">No file contains an absolute user-home path.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="cli">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="tag" data-i18n="cli.tag">Installable CLI</div>
+      <h2 data-i18n="cli.h">Validate and drive your skills from the terminal</h2>
+      <p data-i18n="cli.p">Installable via pip from the release wheel — every command defaults to offline, static, safe behavior. Model-consuming runs require an explicit flag.</p>
+    </div>
+    <div class="grid2">
+      <div class="card rv">
+        <h3><span class="g">❯</span><span data-i18n="cli.c1.h">Install</span></h3>
+        <div class="cmd-block">
+          <div class="cm"><span class="mono $">$</span> <span class="mono">pip install skill-spec</span></div>
+          <pre><code><span>skill-spec-validate  .          # PASS: skill-spec package contract</span>
+skill-spec-skill-up validate .   # validate eval schema (no model)
+skill-spec-skill-up run . --execute   # real model evaluation (gated)
+skill-spec-skillopt preflight .  # SKILLOPT_READY only when complete</code></pre>
+        </div>
+      </div>
+      <div class="card rv">
+        <h3><span class="g">❯</span><span data-i18n="cli.c2.h">Or run from the repo</span></h3>
+        <div class="cmd-block">
+          <div class="cm"><span class="mono $">$</span> <span class="mono">python3 scripts/validate_skill_package.py .</span></div>
+          <pre><code><span>python3 -m unittest discover -s tests</span>
+python3 scripts/skill_up.py validate &lt;skill-dir&gt;
+python3 scripts/skillopt.py preflight &lt;skill-dir&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="workflow">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="tag" data-i18n="workflow.tag">Workflow</div>
+      <h2 data-i18n="workflow.h">Create, evaluate, optimize — under control</h2>
+      <p data-i18n="workflow.p">The standard reports each layer of evidence separately and never lets one impersonate another.</p>
+    </div>
+    <div class="flow rv">
+      <div class="step"><h4 data-i18n="wf1.t">Scaffold</h4><p data-i18n="wf1.d">Full package: entry + prompt + metadata + three eval cases + validator.</p></div>
+      <div class="step"><h4 data-i18n="wf2.t">Validate</h4><p data-i18n="wf2.d">Offline structural, safety, and link checks until PASS.</p></div>
+      <div class="step"><h4 data-i18n="wf3.t">Evaluate</h4><p data-i18n="wf3.d">skill-up validate proves the eval schema; a gated run observes real model behavior.</p></div>
+      <div class="step"><h4 data-i18n="wf4.t">Optimize</h4><p data-i18n="wf4.d">SkillOpt trains a candidate only; promotion needs non-degraded held-out plus a human gate.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta-band rv">
+      <h2 data-i18n="cta.h">Ship skills that are safe to evolve</h2>
+      <p data-i18n="cta.p">Read the full standard in English or 中文, grab the release artifacts, or join the conversation.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://github.com/xsoway/skill-spec/blob/main/README.md" data-i18n="cta.b1">Read the standard</a>
+        <a class="btn btn-ghost" href="https://github.com/xsoway/skill-spec/discussions" data-i18n="cta.b2">Ask a question</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <span class="brand"><span class="dot"></span>skill-spec</span>
+    <div class="foot-links">
+      <a href="https://github.com/xsoway/skill-spec" data-i18n="foot.gh">GitHub</a>
+      <a href="https://github.com/xsoway/skill-spec/releases" data-i18n="foot.rel">Releases</a>
+      <a href="https://github.com/xsoway/skill-spec/discussions" data-i18n="foot.disc">Discussions</a>
+      <a href="https://github.com/xsoway/skill-spec/blob/main/LICENSE" data-i18n="foot.lic">MIT License</a>
+    </div>
+    <span data-i18n="foot.made">© 2026 xulanzhong</span>
+  </div>
+</footer>
+
+<script>
+/* ---------- i18n ---------- */
+const I18N = {
+  en: {
+    "lang.en":"EN","lang.zh":"中文","nav.about":"About","nav.contract":"Contract","nav.cli":"CLI","nav.workflow":"Workflow",
+    "hero.eyebrow":"Engineering standard for Codex Skill packages",
+    "hero.h1a":"Build Codex Skills that","hero.h1b":"ship like software",
+    "hero.sub":"skill-spec turns \"writing a skill\" from a lone SKILL.md into a complete, verifiable, safety-bounded package — discoverable, installable, evaluable, and safely evolvable.",
+    "hero.cta1":"View on GitHub","hero.cta2":"Releases & assets",
+    "pillar1.k":"01 · Discoverable","pillar1.t":"Machine-readable metadata","pillar1.d":"agents/openai.yaml exposes key-consistent metadata so an agent runtime can find and route to the skill.",
+    "pillar2.k":"02 · Installable","pillar2.t":"Self-contained packages","pillar2.d":"Deep rules are pulled in on demand from references/, so a package copied on its own still works.",
+    "pillar3.k":"03 · Evaluable","pillar3.t":"Layered evidence","pillar3.d":"Static validation, model run, and training are reported separately — never impersonating each other.",
+    "pillar4.k":"04 · Safely Evolvable","pillar4.t":"Gated, rollback-friendly","pillar4.d":"Optimization only promotes a candidate on non-degraded held-out plus human approval. No silent overwrites.",
+    "about.tag":"What it is","about.h":"From a lone entry point to a shippable package",
+    "about.p":"A Codex Skill is a self-contained capability bundle an AI coding agent loads on demand. Under this standard, a skill becomes a package: a lightweight activation entry, a complete execution spec, machine-readable discovery metadata, a pinned regression contract, and an executable safety validator.",
+    "about.card.h":"Why the standard exists",
+    "about.card.l1":"Discoverable — consistent metadata an agent runtime can actually route on.",
+    "about.card.l2":"Installable — each package is self-contained and works on its own.",
+    "about.card.l3":"Evaluable — a static check is never falsely reported as verified model behavior.",
+    "about.card.l4":"Safely evolvable — candidates require a held-out gate plus a human approver.",
+    "about.card.l5":"Safe — packages never ship real secrets, personal data, or absolute local paths.",
+    "contract.tag":"Package contract","contract.h":"Six invariants, verified offline","contract.p":"The validator checks required artifacts, name/key consistency, required headings, and scans every file for credentials and absolute local paths.",
+    "contract.l1":"Required artifacts exist — SKILL.md, prompts/<name>.md, agents/openai.yaml, evals/eval.yaml, three cases, the validator itself.",
+    "contract.l2":"SKILL.md frontmatter name matches the directory.",
+    "contract.l3":"agents/openai.yaml metadata.key matches the directory.",
+    "contract.l4":"SKILL.md contains the six required headings.",
+    "contract.l5":"No file matches the credential pattern.",
+    "contract.l6":"No file contains an absolute user-home path.",
+    "cli.tag":"Installable CLI","cli.h":"Validate and drive your skills from the terminal","cli.p":"Installable via pip from the release wheel — every command defaults to offline, static, safe behavior. Model-consuming runs require an explicit flag.",
+    "cli.c1.h":"Install","cli.c2.h":"Or run from the repo",
+    "workflow.tag":"Workflow","workflow.h":"Create, evaluate, optimize — under control","workflow.p":"The standard reports each layer of evidence separately and never lets one impersonate another.",
+    "wf1.t":"Scaffold","wf1.d":"Full package: entry + prompt + metadata + three eval cases + validator.",
+    "wf2.t":"Validate","wf2.d":"Offline structural, safety, and link checks until PASS.",
+    "wf3.t":"Evaluate","wf3.d":"skill-up validate proves the eval schema; a gated run observes real model behavior.",
+    "wf4.t":"Optimize","wf4.d":"SkillOpt trains a candidate only; promotion needs non-degraded held-out plus a human gate.",
+    "cta.h":"Ship skills that are safe to evolve","cta.p":"Read the full standard in English or 中文, grab the release artifacts, or join the conversation.","cta.b1":"Read the standard","cta.b2":"Ask a question",
+    "foot.gh":"GitHub","foot.rel":"Releases","foot.disc":"Discussions","foot.lic":"MIT License","foot.made":"© 2026 xulanzhong"
+  },
+  zh: {
+    "lang.en":"EN","lang.zh":"中文","nav.about":"关于","nav.contract":"契约","nav.cli":"CLI","nav.workflow":"工作流",
+    "hero.eyebrow":"Codex Skill 包工程标准",
+    "hero.h1a":"让 Codex Skill","hero.h1b":"像软件一样交付",
+    "hero.sub":"skill-spec 把“写一个 Skill”从孤零零的 SKILL.md 升级为完整、可验证、有安全边界的包——可发现、可安装、可评测、可安全演进。",
+    "hero.cta1":"查看 GitHub","hero.cta2":"发行版与产物",
+    "pillar1.k":"01 · 可发现","pillar1.t":"机器可读的元数据","pillar1.d":"agents/openai.yaml 暴露一致的元数据，让 Agent 运行时能找到并路由到该 Skill。",
+    "pillar2.k":"02 · 可安装","pillar2.t":"自包含的包","pillar2.d":"深层规则按需从 references/ 懒加载，单独复制的包依旧可工作。",
+    "pillar3.k":"03 · 可评测","pillar3.t":"分层证据","pillar3.d":"静态校验、模型 run、训练分别报告，绝不互相冒充。",
+    "pillar4.k":"04 · 可安全演进","pillar4.t":"门禁 + 可回滚","pillar4.d":"优化只在留出集不退化且有人工批准时才会被提升，绝不静默覆盖。",
+    "about.tag":"它是什么","about.h":"从孤立的入口到可交付的包",
+    "about.p":"Codex Skill 是 AI 编码 Agent 按需加载的自包含能力包。在本标准下，Skill 变成一个包：轻量激活入口、完整执行规格、机器可读发现元数据、固定的回归契约，以及可执行的安全校验器。",
+    "about.card.h":"为什么需要这个标准",
+    "about.card.l1":"可发现——一致元数据，Agent 运行时可真正路由。",
+    "about.card.l2":"可安装——每个包自包含，独立可工作。",
+    "about.card.l3":"可评测——静态检查绝不冒充‘已验证的模型行为’。",
+    "about.card.l4":"可安全演进——候选需要留出集门禁加人工审批。",
+    "about.card.l5":"安全——包绝不携带真实密钥、个人数据或绝对本机路径。",
+    "contract.tag":"包契约","contract.h":"六个不变量，离线验证","contract.p":"校验器检查必需工件、name/key 一致性、必备标题，并扫描每个文件的凭据与绝对本机路径。",
+    "contract.l1":"必需工件存在——SKILL.md、prompts/<name>.md、agents/openai.yaml、evals/eval.yaml、三个 case、校验器自身。",
+    "contract.l2":"SKILL.md 前置 name 与目录名一致。",
+    "contract.l3":"agents/openai.yaml 的 metadata.key 与目录名一致。",
+    "contract.l4":"SKILL.md 包含六个必备标题。",
+    "contract.l5":"任何文件都不得匹配凭据规则。",
+    "contract.l6":"任何文件都不得包含绝对用户目录路径。",
+    "cli.tag":"可安装 CLI","cli.h":"在终端校验并驱动你的 Skill","cli.p":"可从发行版 wheel 通过 pip 安装——每个命令默认离线、静态、安全；消耗模型的 run 需显式标志。",
+    "cli.c1.h":"安装","cli.c2.h":"或从仓库运行",
+    "workflow.tag":"工作流","workflow.h":"创建、评测、优化——全程受控","workflow.p":"标准分层报告证据，绝不让一层冒充另一层。",
+    "wf1.t":"搭建","wf1.d":"完整包：入口 + prompt + 元数据 + 三个 case + 校验器。",
+    "wf2.t":"校验","wf2.d":"离线结构、安全与链接校验，直到 PASS。",
+    "wf3.t":"评测","wf3.d":"skill-up validate 校验 eval 结构；gated run 观察真实模型行为。",
+    "wf4.t":"优化","wf4.d":"SkillOpt 只训练候选；提升需要留出集不退化加人工门禁。",
+    "cta.h":"交付可安全演进的 Skill","cta.p":"中英文阅读完整标准，获取发行产物，或加入讨论。","cta.b1":"阅读标准","cta.b2":"提问",
+    "foot.gh":"GitHub","foot.rel":"发行版","foot.disc":"讨论","foot.lic":"MIT 协议","foot.made":"© 2026 xulanzhong"
+  }
+};
+
+/* ---------- language engine ---------- */
+function applyLang(lang){
+  const d = I18N[lang] || I18N.en;
+  document.documentElement.setAttribute("lang", lang);
+  document.documentElement.setAttribute("data-lang", lang);
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (d[key] != null) el.textContent = d[key];
+  });
+  document.querySelectorAll("[data-langbtn]").forEach(b => {
+    b.classList.toggle("active", b.getAttribute("data-langbtn") === lang);
+  });
+}
+function getLang(){
+  const url = new URLSearchParams(location.search).get("lang");
+  if (url === "zh" || url === "en") return url;
+  const stored = localStorage.getItem("skill-spec-lang");
+  if (stored === "zh" || stored === "en") return stored;
+  return "en";
+}
+
+/* ---------- init ---------- */
+let lang = getLang();
+applyLang(lang);
+
+document.querySelectorAll("[data-langbtn]").forEach(b => {
+  b.addEventListener("click", () => {
+    lang = b.getAttribute("data-langbtn");
+    localStorage.setItem("skill-spec-lang", lang);
+    const url = new URL(location);
+    url.searchParams.set("lang", lang);
+    history.replaceState({}, "", url);
+    applyLang(lang);
+  });
+});
+
+/* ---------- scroll reveal ---------- */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll(".rv").forEach(el => io.observe(el));
+</script>
+</body>
+</html>
